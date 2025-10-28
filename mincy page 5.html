@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000; 
+      overflow: hidden; 
+    }
+    .url-text {
+      position: fixed;
+      bottom:190px; 
+      width: 100%;
+      text-align: center;
+      color: #8B8B8B;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+      font-size: 14px;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="url-text">support.apple.com/mac/startup</div>
+  <script>
+    function setup() {
+      createCanvas(windowWidth, windowHeight);
+      noLoop();
+    }
+
+    function draw() {
+      background(0); 
+      
+      stroke("#8B8B8B"); 
+      strokeWeight(10); 
+      noFill(); 
+      
+      let circleSize = 70; 
+      ellipse(windowWidth/2, windowHeight/2, circleSize, circleSize);
+      
+      line(
+        windowWidth/2 - circleSize/3,
+        windowHeight/2 - circleSize/3, 
+        windowWidth/2 + circleSize/3, 
+        windowHeight/2 + circleSize/3  
+      );
+    }
+
+  </script>
+</body>
+</html>

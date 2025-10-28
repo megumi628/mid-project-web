@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>page 4</title>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.js"></script>
+     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        background-color: #f0f0f0;
+        font-family: 'Inter', sans-serif;
+      }
+    </style> 
+    <script>
+      let terminals = [];
+let terminalWidth = 300;
+let terminalHeight = 100;
+let cursorImg; 
+let rotation = 0; 
+let dragCounter = 0;
+
+const terminalContent = [
+  "Last login: Thu Oct 23 15:40:33 on ttys001",
+  "mincy@10-20-110-197 ~ % ",
+];
+
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  terminals.push({
+    x: (width - terminalWidth) / 2,
+    y: (height - terminalHeight) / 2,
+    isDragging: false,
+    offsetX: 0,
+    offsetY: 0,
+    zIndex: 1 
+  });
+  
+}
+
+function draw() {
+  background(240);
+  
+
+  terminals.sort((a, b) => a.zIndex - b.zIndex);
+  
+
+  terminals.forEach(terminal => {
+    drawTerminal(terminal.x, terminal.y);
+  });
+  
+  
+}
+
+function drawTerminal(x, y) {
+
+  fill(255);
+  rect(x, y, terminalWidth, terminalHeight, 10);
+
+  fill('#FAFAFA');
+  rect(x, y, terminalWidth, 30, 10, 10, 0, 0);
+
+  fill('#FF6058');
+  ellipse(x + 15, y + 15, 12, 12);
+  fill('#FEBC2E');
+  ellipse(x + 36, y + 15, 12, 12);
+  fill('#27C840');
+  ellipse(x + 57, y + 15, 12, 12);
+  noStroke();
+  
+  fill('#4A4A4A');
+  textSize(13);
+  textAlign(CENTER, CENTER);
+  textFont('Inter');
+  textStyle(BOLD);
+  text("mincy—-zsh—45x5", x + terminalWidth/2, y + 15);
+  textStyle(NORMAL);
+
+  fill(0);
+  textSize(11);
+  textFont('Menlo');
+  textAlign(LEFT, TOP);
+  let textY = y + 35;
+  const lineHeight = 16;
+  
+  for (let i = 0; i < terminalContent.length; i++) {
+    text(terminalContent[i], x + 6, textY);
+    textY += lineHeight;
+
+    if (i === terminalContent.length - 1) {
+      let cursorXPos = x + 4 + textWidth(terminalContent[i]);
+      fill(57, sin(frameCount * 0.1) * 0.5 + 0.5 * 255);
+      rect(cursorXPos, textY - lineHeight - 3, 7, 16);
+    }
+  }
+}
+
+function mousePressed() {
+  for (let i = terminals.length - 1; i >= 0; i--) {
+    let terminal = terminals[i];
+    if (mouseX > terminal.x && mouseX < terminal.x + terminalWidth &&
+        mouseY > terminal.y && mouseY < terminal.y + 30) {
+      terminal.zIndex = terminals.length;
+      terminal.isDragging = true;
+      terminal.offsetX = mouseX - terminal.x;
+      terminal.offsetY = mouseY - terminal.y;
+      break;
+    }
+  }
+}
+
+function mouseDragged() {
+  dragCounter++;
+  let draggingTerminal = null;
+  
+  for (let terminal of terminals) {
+    if (terminal.isDragging) {
+      draggingTerminal = terminal;
+      terminal.x = mouseX - terminal.offsetX;
+      terminal.y = mouseY - terminal.offsetY;
+      terminal.x = constrain(terminal.x, 0, width - terminalWidth);
+      terminal.y = constrain(terminal.y, 0, height - terminalHeight);
+      break;
+    }
+  }
+  
+  if (draggingTerminal && dragCounter % 10 === 0) {
+    let newX = draggingTerminal.x;
+    let newY = draggingTerminal.y;
+
+    newX = constrain(newX, 0, width - terminalWidth);
+    newY = constrain(newY, 0, height - terminalHeight);
+    
+    terminals.push({
+      x: newX,
+      y: newY,
+      isDragging: false,
+      offsetX: 0,
+      offsetY: 0,
+      zIndex: terminals.length + 1
+    });
+  }
+}
+
+function mouseReleased() {
+  for (let terminal of terminals) {
+    terminal.isDragging = false;
+  }
+}
+
+function keyPressed() {
+  return false;
+}
+
+</script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+  <a href="mincy page 5.html"> Repair </a>
+</body>
+</html>

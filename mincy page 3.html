@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mincy coding project</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .progress-bar {
+                height: 7px;
+                width: 0%;
+                background-color: #fff;
+                transition: width 0.3s ease;
+                border-radius: 3px;
+                position: relative;
+                top: -1px;
+                left: -1px;
+            }
+            .progress-container {
+                background-color: #565656;
+                height: 5px;
+                border-radius: 3px;
+                overflow: hidden;
+                position: relative;
+            }
+        }
+    </style>
+</head>
+<body class="bg-black min-h-screen flex flex-col items-center justify-center overflow-hidden text-white">
+
+    <div id="apple-logo" class="text-white text-[80px] md:text-[120px] mb-12 transition-all duration-500">
+        <i class="fa fa-apple"></i>
+    </div>
+    
+    <div class="w-1/4 md:w-1/6 progress-container mt-4">
+        <div id="progress-bar" class="progress-bar"></div>
+    </div>
+    
+    <script>
+        const appleLogo = document.getElementById('apple-logo');
+        const progressBar = document.getElementById('progress-bar');
+        let progress = 0;
+        let loadingInterval;
+        let freezeTimeout;
+        let freezeCount = 0;
+        const maxFreezes = 3;
+        
+        function startLoading() {
+            progress = 0;
+            freezeCount = 0;
+            progressBar.style.width = '0%';
+            
+            clearInterval(loadingInterval);
+            clearTimeout(freezeTimeout);
+            
+            loadingInterval = setInterval(() => {
+                if (progress < 95) {
+                    const increment = Math.random() * 3 + 2;
+                    progress = Math.min(progress + increment, 95);
+                    progressBar.style.width = `${progress}%`;
+                    
+                    if (freezeCount < maxFreezes && Math.random() > 0.85) {
+                        freezeCount++;
+                        triggerFreeze();
+                    }
+                } else {
+                    clearInterval(loadingInterval);
+                }
+            }, 120);
+        }
+        
+        function triggerFreeze() {
+            clearInterval(loadingInterval);
+            clearTimeout(freezeTimeout);
+            
+            const freezeDuration = Math.random() * 2000 + 1000;
+            
+            freezeTimeout = setTimeout(() => {
+                startLoading();
+            }, freezeDuration);
+        }
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                startLoading();
+            }
+        });
+        
+        startLoading();
+    </script>
+</body>
+</html>

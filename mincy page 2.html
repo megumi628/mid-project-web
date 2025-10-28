@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mincy mid project</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            height: 100vh;
+            overflow: hidden;
+            background-color: #000;
+            position: relative;
+            transition: transform 0.05s;
+        }
+        
+        .glitch-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+            opacity: 0;
+        }
+        
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            mix-blend-mode: overlay;
+        }
+        
+        .glitch-rip {
+            position: fixed;
+            height: 100%;
+            width: 5%;
+            background: inherit;
+            z-index: 1;
+            opacity: 0;
+            transform: translateX(0);
+            transition: transform 0.08s, opacity 0.08s;
+        }
+    </style>
+</head>
+<body>
+    <div class="glitch-overlay"></div>
+    <div class="noise"></div>
+    <div class="glitch-rip"></div>
+
+    <script>
+        const overlay = document.querySelector('.glitch-overlay');
+        const noise = document.querySelector('.noise');
+        const rip = document.querySelector('.glitch-rip');
+        const body = document.body;
+        
+        const glitchColors = [
+            '#ff6b6b', '#4ecdc4', '#45b7d1', 
+            '#ffd166', '#ef476f', '#118ab2',
+            '#ffffff', '#073b4c', '#000000'
+        ];
+        
+        function getRandomColor() {
+            return glitchColors[Math.floor(Math.random() * glitchColors.length)];
+        }
+        
+        function flashEffect() {
+            overlay.style.backgroundColor = getRandomColor();
+            overlay.style.opacity = Math.random() * 0.6 + 0.2;
+            
+            setTimeout(() => {
+                overlay.style.opacity = 0;
+            }, Math.random() * 120 + 30);
+        }
+        
+        function stripeEffect() {
+            const stripeHeight = Math.random() * 10 + 2;
+            const stripeColor = getRandomColor();
+            
+            overlay.style.background = `repeating-linear-gradient(
+                to bottom,
+                transparent,
+                transparent ${stripeHeight}px,
+                ${stripeColor} ${stripeHeight}px,
+                ${stripeColor} ${stripeHeight * 2}px
+            )`;
+            
+            overlay.style.opacity = Math.random() * 0.5 + 0.1;
+            
+            setTimeout(() => {
+                overlay.style.opacity = 0;
+            }, Math.random() * 200 + 50);
+        }
+        
+        function screenRip() {
+            const position = Math.random() * 90 + 5; 
+            const offset = (Math.random() - 0.5) * 40; 
+            
+            rip.style.left = `${position}%`;
+            rip.style.opacity = Math.random() * 0.8 + 0.2;
+            rip.style.transform = `translateX(${offset}px)`;
+            
+            setTimeout(() => {
+                rip.style.opacity = 0;
+                rip.style.transform = 'translateX(0)';
+            }, Math.random() * 150 + 50);
+        }
+        
+        function noiseEffect() {
+            noise.style.opacity = Math.random() * 0.7 + 0.1;
+            
+            setTimeout(() => {
+                noise.style.opacity = 0;
+            }, Math.random() * 400 + 100);
+        }
+        
+        function shakeScreen() {
+            const intensity = Math.random() * 8 + 2;
+            body.style.transform = `translate(
+                ${(Math.random() - 0.5) * intensity}px,
+                ${(Math.random() - 0.5) * intensity}px
+            )`;
+            
+            setTimeout(() => {
+                body.style.transform = 'translate(0, 0)';
+            }, Math.random() * 80 + 30);
+        }
+        
+        function triggerRandomGlitch() {
+            const glitchTypes = [
+                flashEffect, 
+                stripeEffect, 
+                screenRip, 
+                noiseEffect,
+                shakeScreen
+            ];
+            
+            const selectedEffect = glitchTypes[Math.floor(Math.random() * glitchTypes.length)];
+            selectedEffect();
+            
+            if (Math.random() > 0.6) {
+                const secondEffect = glitchTypes[Math.floor(Math.random() * glitchTypes.length)];
+                setTimeout(secondEffect, Math.random() * 100);
+            }
+        }
+        
+        function startGlitches() {
+            triggerRandomGlitch();
+            
+            const nextDelay = Math.random() * 1450 + 50;
+            setTimeout(startGlitches, nextDelay);
+        }
+        
+        function intenseGlitchBurst() {
+            const glitchCount = Math.floor(Math.random() * 8) + 5;
+            
+            for (let i = 0; i < glitchCount; i++) {
+                setTimeout(() => {
+                    triggerRandomGlitch();
+                }, i * (Math.random() * 80 + 30));
+            }
+            
+            const nextBurst = Math.random() * 5000 + 3000;
+            setTimeout(intenseGlitchBurst, nextBurst);
+        }
+        
+        startGlitches();
+        setTimeout(intenseGlitchBurst, 2000); 
+    </script>
+</body>
+</html>
